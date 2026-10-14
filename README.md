@@ -11,6 +11,7 @@ Interaktywna, responsywna plansza logiczna do notowania wskazówek podczas rozwi
 - Trzy stany każdego pola: puste, zaznaczone i skreślone. Klikaj pole, aby przełączać stany.
 - Automatyczny zapis planszy na bieżącym urządzeniu w `localStorage`.
 - Układ dostosowany do ekranów komputerów i telefonów.
+- Tryb offline po pierwszym otwarciu aplikacji z dostępem do internetu.
 
 ## Wymagania
 
@@ -54,7 +55,7 @@ Otwórz opublikowany adres w przeglądarce telefonu:
 - **iPhone/iPad:** w Safari wybierz **Udostępnij → Dodaj do ekranu początkowego → Dodaj**.
 - **Android:** w Chrome wybierz menu **⋮ → Dodaj do ekranu głównego** (lub **Zainstaluj aplikację**, jeśli przeglądarka pokaże tę opcję).
 
-Plansza działa lokalnie w przeglądarce. Zapisane nazwy i zaznaczenia nie synchronizują się automatycznie między urządzeniami.
+Przy pierwszym uruchomieniu otwórz stronę z dostępem do internetu i poczekaj, aż aplikacja się załaduje. Service worker zapisze pliki aplikacji w pamięci podręcznej; później plansza będzie się otwierać również bez połączenia. Zapisane nazwy i zaznaczenia są przechowywane lokalnie i nie synchronizują się automatycznie między urządzeniami.
 
 ## Dostępne polecenia
 
