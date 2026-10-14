@@ -32,6 +32,30 @@ npm run dev
 
 Vite wyświetli lokalny adres aplikacji w terminalu.
 
+## Publikacja na GitHub Pages
+
+Repozytorium publikuje aplikację automatycznie przez GitHub Actions po każdym pushu do gałęzi `main`.
+
+1. W GitHub otwórz **Settings → Pages**.
+2. W sekcji **Build and deployment** ustaw **Source** na **GitHub Actions**.
+3. Wypchnij zmiany na GitHub:
+
+   ```sh
+   git push origin main
+   ```
+
+4. W repozytorium otwórz zakładkę **Actions** i poczekaj, aż workflow **Deploy to GitHub Pages** zakończy się powodzeniem.
+5. Aplikacja będzie dostępna pod adresem [https://chomak18.github.io/murdle/](https://chomak18.github.io/murdle/).
+
+## Dodanie skrótu na ekranie telefonu
+
+Otwórz opublikowany adres w przeglądarce telefonu:
+
+- **iPhone/iPad:** w Safari wybierz **Udostępnij → Dodaj do ekranu początkowego → Dodaj**.
+- **Android:** w Chrome wybierz menu **⋮ → Dodaj do ekranu głównego** (lub **Zainstaluj aplikację**, jeśli przeglądarka pokaże tę opcję).
+
+Plansza działa lokalnie w przeglądarce. Zapisane nazwy i zaznaczenia nie synchronizują się automatycznie między urządzeniami.
+
 ## Dostępne polecenia
 
 | Polecenie | Opis |
