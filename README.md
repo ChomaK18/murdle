@@ -1,75 +1,53 @@
-# React + TypeScript + Vite
+# Murdle — notatnik detektywa
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interaktywna, responsywna plansza logiczna do notowania wskazówek podczas rozwiązywania zagadek Murdle. Nazwy kategorii i elementów można dopasować do konkretnego zadania z książki. Plansza i postępy zapisują się lokalnie w przeglądarce.
 
-Currently, two official plugins are available:
+## Funkcje
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Wybór trzech kategorii: osoby, narzędzia i miejsca, lub dodanie czwartej: motywu.
+- Wybór trzech albo czterech elementów w każdej kategorii.
+- Wpisywanie własnych nazw elementów.
+- Plansza z układem sekcji wzorowanym na książkowej siatce logicznej.
+- Trzy stany każdego pola: puste, zaznaczone i skreślone. Klikaj pole, aby przełączać stany.
+- Automatyczny zapis planszy na bieżącym urządzeniu w `localStorage`.
+- Układ dostosowany do ekranów komputerów i telefonów.
 
-## React Compiler
+## Wymagania
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Node.js i npm.
 
-## Expanding the ESLint configuration
+## Uruchomienie lokalne
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Zainstaluj zależności:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```sh
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+Uruchom serwer deweloperski:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```sh
+npm run dev
 ```
+
+Vite wyświetli lokalny adres aplikacji w terminalu.
+
+## Dostępne polecenia
+
+| Polecenie | Opis |
+| --- | --- |
+| `npm run dev` | Uruchamia serwer deweloperski z odświeżaniem po zmianach. |
+| `npm run build` | Sprawdza typy TypeScript i tworzy wersję produkcyjną w `dist/`. |
+| `npm run preview` | Udostępnia lokalnie gotowy build do sprawdzenia. |
+| `npm run lint` | Uruchamia ESLint. |
+
+## Stos technologiczny
+
+- React
+- TypeScript
+- Vite
+- CSS
+
+## Dane i prywatność
+
+Konfiguracja planszy, wpisane nazwy i zaznaczenia są przechowywane w pamięci lokalnej przeglądarki (`localStorage`). Nie są wysyłane do serwera. Wyczyszczenie danych witryny lub użycie innej przeglądarki/urządzenia usunie lub nie przeniesie zapisanych postępów.
