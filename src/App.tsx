@@ -1,40 +1,50 @@
 import BoardScreen from './components/BoardScreen'
+import PuzzleTrackerScreen from './components/PuzzleTrackerScreen'
 import SetupScreen from './components/SetupScreen'
 import { useBoard } from './hooks/useBoard'
 
 function App() {
   const boardState = useBoard()
 
-  if (boardState.isEditing || !boardState.savedBoard) {
+  if (boardState.activePuzzleId === null) {
     return (
-      <SetupScreen
-        config={boardState.config}
-        savedBoard={boardState.savedBoard}
-        setConfig={boardState.setConfig}
-        updateCategoryCount={boardState.updateCategoryCount}
-        updateName={boardState.updateName}
-        createBoard={boardState.createBoard}
-        onCancel={() => {
-          if (boardState.savedBoard) {
-            boardState.setConfig(boardState.savedBoard)
-            boardState.setIsEditing(false)
-          }
-        }}
+      <PuzzleTrackerScreen
+        puzzles={boardState.puzzles}
+        onOpenPuzzle={boardState.openPuzzle}
+        onToggleSolved={boardState.toggleSolved}
       />
     )
   }
 
-  const board = boardState.savedBoard
+  if (boardState.isEditing || !boardState.activeBoard) {
+    return (
+      <SetupScreen
+        puzzleId={boardState.activePuzzleId}
+        config={boardState.config}
+        savedBoard={boardState.activeBoard}
+        setConfig={boardState.setConfig}
+        updateCategoryCount={boardState.updateCategoryCount}
+        updateName={boardState.updateName}
+        createBoard={boardState.createBoard}
+        onCancel={boardState.cancelEditing}
+      />
+    )
+  }
+
+  const board = boardState.activeBoard
+  const puzzleId = boardState.activePuzzleId
+  const status = boardState.puzzles[puzzleId]?.status ?? 'in-progress'
 
   return (
     <BoardScreen
+      puzzleId={puzzleId}
+      status={status}
       board={board}
-      onOpenSettings={() => {
-        boardState.setConfig(board)
-        boardState.setIsEditing(true)
-      }}
+      onBack={boardState.closePuzzle}
+      onOpenSettings={boardState.openSettings}
       onToggleMark={boardState.toggleMark}
       onClearMarks={boardState.clearMarks}
+      onToggleSolved={() => boardState.toggleSolved(puzzleId)}
     />
   )
 }

@@ -12,3 +12,12 @@ export type BoardConfig = {
 export type SavedBoard = BoardConfig & {
   marks: Record<string, Marks>
 }
+
+export type PuzzleStatus = 'not-started' | 'in-progress' | 'solved'
+
+export type PuzzleProgress = {
+  status: PuzzleStatus
+  board?: SavedBoard
+}
+
+export type PuzzleCollection = Record<number, PuzzleProgress>

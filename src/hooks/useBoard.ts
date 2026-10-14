@@ -1,37 +1,70 @@
 import { useEffect, useState } from 'react'
 import { CATEGORY_DETAILS, EMPTY_NAMES, INITIAL_CONFIG } from '../data/categories'
-import { pairCellKey, pairKey, readSavedBoard, saveBoard } from '../lib/board'
-import type { BoardConfig, CategoryId, ItemCount, Mark, SavedBoard } from '../types/board'
+import { pairCellKey, pairKey, readPuzzleCollection, savePuzzleCollection } from '../lib/board'
+import type {
+  BoardConfig,
+  CategoryId,
+  ItemCount,
+  Mark,
+  PuzzleCollection,
+  SavedBoard,
+} from '../types/board'
 
 type BoardState = {
-  savedBoard: SavedBoard | null
+  puzzles: PuzzleCollection
+  activePuzzleId: number | null
+  activeBoard: SavedBoard | null
   config: BoardConfig
   isEditing: boolean
-  setIsEditing: (editing: boolean) => void
+  openPuzzle: (puzzleId: number) => void
+  closePuzzle: () => void
+  openSettings: () => void
+  cancelEditing: () => void
   setConfig: (config: BoardConfig | ((current: BoardConfig) => BoardConfig)) => void
   updateCategoryCount: (itemCount: ItemCount) => void
   updateName: (categoryId: CategoryId, index: number, name: string) => void
   createBoard: () => void
   toggleMark: (first: CategoryId, second: CategoryId, row: number, column: number) => void
   clearMarks: () => void
+  toggleSolved: (puzzleId: number) => void
 }
 
 export function useBoard(): BoardState {
-  const [initial] = useState(() => {
-    const savedBoard = readSavedBoard()
-    return {
-      savedBoard,
-      config: savedBoard ?? INITIAL_CONFIG,
-      isEditing: savedBoard === null,
-    }
-  })
-  const [savedBoard, setSavedBoard] = useState<SavedBoard | null>(initial.savedBoard)
-  const [config, setConfig] = useState<BoardConfig>(initial.config)
-  const [isEditing, setIsEditing] = useState(initial.isEditing)
+  const [puzzles, setPuzzles] = useState<PuzzleCollection>(readPuzzleCollection)
+  const [activePuzzleId, setActivePuzzleId] = useState<number | null>(null)
+  const [config, setConfig] = useState<BoardConfig>(INITIAL_CONFIG)
+  const [isEditing, setIsEditing] = useState(false)
+  const activeBoard = activePuzzleId === null ? null : puzzles[activePuzzleId]?.board ?? null
 
   useEffect(() => {
-    if (savedBoard) saveBoard(savedBoard)
-  }, [savedBoard])
+    savePuzzleCollection(puzzles)
+  }, [puzzles])
+
+  function openPuzzle(puzzleId: number) {
+    const progress = puzzles[puzzleId]
+    setActivePuzzleId(puzzleId)
+    setConfig(progress?.board ?? INITIAL_CONFIG)
+    setIsEditing(!progress?.board)
+  }
+
+  function closePuzzle() {
+    setActivePuzzleId(null)
+    setIsEditing(false)
+  }
+
+  function openSettings() {
+    if (activeBoard) setConfig(activeBoard)
+    setIsEditing(true)
+  }
+
+  function cancelEditing() {
+    if (activeBoard) {
+      setConfig(activeBoard)
+      setIsEditing(false)
+    } else {
+      closePuzzle()
+    }
+  }
 
   function updateCategoryCount(itemCount: ItemCount) {
     setConfig((current) => ({
@@ -58,6 +91,7 @@ export function useBoard(): BoardState {
   }
 
   function createBoard() {
+    if (activePuzzleId === null) return
     const names = { ...EMPTY_NAMES }
     for (const categoryId of config.categoryIds) {
       names[categoryId] = Array.from({ length: config.itemCount }, (_, index) =>
@@ -65,44 +99,89 @@ export function useBoard(): BoardState {
         `${CATEGORY_DETAILS[categoryId].singular} ${index + 1}`,
       )
     }
-    setSavedBoard({
+
+    const board: SavedBoard = {
       categoryIds: [...config.categoryIds],
       itemCount: config.itemCount,
       names,
       marks: {},
-    })
+    }
+    setPuzzles((current) => ({
+      ...current,
+      [activePuzzleId]: {
+        status: current[activePuzzleId]?.status === 'solved' ? 'solved' : 'in-progress',
+        board,
+      },
+    }))
     setIsEditing(false)
   }
 
   function toggleMark(first: CategoryId, second: CategoryId, row: number, column: number) {
-    setSavedBoard((current) => {
-      if (!current) return current
+    if (activePuzzleId === null) return
+    setPuzzles((current) => {
+      const progress = current[activePuzzleId]
+      const board = progress?.board
+      if (!progress || !board) return current
       const key = pairKey(first, second)
       const markKey = pairCellKey(first, second, row, column)
-      const currentMark = current.marks[key]?.[markKey] ?? 'empty'
+      const currentMark = board.marks[key]?.[markKey] ?? 'empty'
       const nextMark: Mark =
         currentMark === 'empty' ? 'selected' : currentMark === 'selected' ? 'crossed' : 'empty'
-      const pairMarks = { ...current.marks[key] }
+      const pairMarks = { ...board.marks[key] }
       if (nextMark === 'empty') delete pairMarks[markKey]
       else pairMarks[markKey] = nextMark
-      return { ...current, marks: { ...current.marks, [key]: pairMarks } }
+      return {
+        ...current,
+        [activePuzzleId]: {
+          ...progress,
+          board: { ...board, marks: { ...board.marks, [key]: pairMarks } },
+        },
+      }
     })
   }
 
   function clearMarks() {
-    setSavedBoard((current) => current ? { ...current, marks: {} } : current)
+    if (activePuzzleId === null) return
+    setPuzzles((current) => {
+      const progress = current[activePuzzleId]
+      if (!progress?.board) return current
+      return {
+        ...current,
+        [activePuzzleId]: {
+          ...progress,
+          board: { ...progress.board, marks: {} },
+        },
+      }
+    })
+  }
+
+  function toggleSolved(puzzleId: number) {
+    setPuzzles((current) => {
+      const progress = current[puzzleId]
+      const status =
+        progress?.status === 'solved'
+          ? progress.board ? 'in-progress' : 'not-started'
+          : 'solved'
+      return { ...current, [puzzleId]: { ...progress, status } }
+    })
   }
 
   return {
-    savedBoard,
+    puzzles,
+    activePuzzleId,
+    activeBoard,
     config,
     isEditing,
-    setIsEditing,
+    openPuzzle,
+    closePuzzle,
+    openSettings,
+    cancelEditing,
     setConfig,
     updateCategoryCount,
     updateName,
     createBoard,
     toggleMark,
     clearMarks,
+    toggleSolved,
   }
 }

@@ -1,28 +1,42 @@
-import type { CategoryId, SavedBoard } from '../types/board'
+import type { CategoryId, PuzzleStatus, SavedBoard } from '../types/board'
 import Brand from './Brand'
 import LogicBoard from './LogicBoard'
 
 type BoardScreenProps = {
+  puzzleId: number
+  status: PuzzleStatus
   board: SavedBoard
+  onBack: () => void
   onOpenSettings: () => void
   onToggleMark: (first: CategoryId, second: CategoryId, row: number, column: number) => void
   onClearMarks: () => void
+  onToggleSolved: () => void
 }
 
-function BoardScreen({ board, onOpenSettings, onToggleMark, onClearMarks }: BoardScreenProps) {
+function BoardScreen({
+  puzzleId,
+  status,
+  board,
+  onBack,
+  onOpenSettings,
+  onToggleMark,
+  onClearMarks,
+  onToggleSolved,
+}: BoardScreenProps) {
   return (
     <main className="board-page">
       <header className="board-topbar">
         <Brand />
         <div className="board-topbar-actions">
           <span className="save-status"><span /> ZAPISANO NA TYM URZĄDZENIU</span>
+          <button className="outline-button" onClick={onBack}>Lista zagadek</button>
           <button className="outline-button" onClick={onOpenSettings}>Ustawienia planszy</button>
         </div>
       </header>
 
       <section className="board-heading">
         <div>
-          <div className="eyebrow"><span className="eyebrow-line" /> AKTA SPRAWY</div>
+          <div className="eyebrow"><span className="eyebrow-line" /> ZAGADKA {puzzleId.toString().padStart(2, '0')} · AKTA SPRAWY</div>
           <h1>Wszystko się <em>łączy.</em></h1>
           <p>Kliknij pole, aby zmienić jego stan: puste, zaznaczone, skreślone.</p>
         </div>
@@ -33,6 +47,13 @@ function BoardScreen({ board, onOpenSettings, onToggleMark, onClearMarks }: Boar
             <span><i className="legend-crossed">×</i> Wykluczone</span>
           </div>
           <button className="clear-button" onClick={onClearMarks}>Wyczyść planszę</button>
+          <button
+            className={`solved-action${status === 'solved' ? ' is-solved' : ''}`}
+            onClick={onToggleSolved}
+            aria-pressed={status === 'solved'}
+          >
+            {status === 'solved' ? '✓ ZAGADKA ROZWIĄZANA' : 'OZNACZ JAKO ROZWIĄZANĄ'}
+          </button>
         </div>
       </section>
 

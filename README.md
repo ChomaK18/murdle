@@ -12,6 +12,7 @@ Interaktywna, responsywna plansza logiczna do notowania wskazówek podczas rozwi
 - Automatyczny zapis planszy na bieżącym urządzeniu w `localStorage`.
 - Układ dostosowany do ekranów komputerów i telefonów.
 - Tryb offline po pierwszym otwarciu aplikacji z dostępem do internetu.
+- Lista 100 zagadek z osobnymi planszami i stanami: nierozpoczęta, w trakcie i rozwiązana.
 
 ## Wymagania
 

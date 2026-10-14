@@ -3,6 +3,7 @@ import type { BoardConfig, CategoryId, ItemCount, SavedBoard } from '../types/bo
 import Brand from './Brand'
 
 type SetupScreenProps = {
+  puzzleId: number
   config: BoardConfig
   savedBoard: SavedBoard | null
   setConfig: (config: BoardConfig | ((current: BoardConfig) => BoardConfig)) => void
@@ -13,6 +14,7 @@ type SetupScreenProps = {
 }
 
 function SetupScreen({
+  puzzleId,
   config,
   savedBoard,
   setConfig,
@@ -27,7 +29,7 @@ function SetupScreen({
     <main className="setup-page">
       <header className="setup-topbar">
         <Brand />
-        <span className="setup-kicker">NOTATNIK DETEKTYWA</span>
+        <span className="setup-kicker">ZAGADKA {puzzleId.toString().padStart(2, '0')} · NOTATNIK DETEKTYWA</span>
       </header>
 
       <section className="setup-card">
