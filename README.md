@@ -73,6 +73,20 @@ Przy pierwszym uruchomieniu otwórz stronę z dostępem do internetu i poczekaj,
 - Vite
 - CSS
 
+## Struktura projektu
+
+```text
+src/
+├── components/       # Widoki konfiguracji i planszy oraz współdzielony branding
+├── data/             # Kategorie i domyślna konfiguracja
+├── hooks/            # Stan planszy, edycja i automatyczny zapis
+├── lib/              # Odczyt/zapis danych i funkcje siatki logicznej
+├── types/            # Wspólne typy TypeScript
+├── App.tsx           # Składanie widoków i przepływ aplikacji
+├── index.css         # Globalne style i responsywny wygląd komponentów
+└── main.tsx          # Punkt wejścia React i rejestracja service workera
+```
+
 ## Dane i prywatność
 
 Konfiguracja planszy, wpisane nazwy i zaznaczenia są przechowywane w pamięci lokalnej przeglądarki (`localStorage`). Nie są wysyłane do serwera. Wyczyszczenie danych witryny lub użycie innej przeglądarki/urządzenia usunie lub nie przeniesie zapisanych postępów.
