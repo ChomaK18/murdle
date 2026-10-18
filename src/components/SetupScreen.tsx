@@ -1,11 +1,28 @@
+import type { KeyboardEvent } from 'react'
 import { CATEGORY_DETAILS, REQUIRED_CATEGORIES } from '../data/categories'
 import type { BoardConfig, CategoryId, ItemCount, SavedBoard } from '../types/board'
 import Brand from './Brand'
+
+const INPUT_CATEGORY_ORDER: CategoryId[] = ['person', 'place', 'tool', 'motive']
+
+function focusNextInput(event: KeyboardEvent<HTMLInputElement>) {
+  if (event.key !== 'Enter') return
+
+  event.preventDefault()
+  const inputs = Array.from(
+    event.currentTarget
+      .closest('.name-groups')
+      ?.querySelectorAll<HTMLInputElement>('input') ?? [],
+  )
+  const currentIndex = inputs.indexOf(event.currentTarget)
+  inputs[currentIndex + 1]?.focus()
+}
 
 type SetupScreenProps = {
   puzzleId: number
   config: BoardConfig
   savedBoard: SavedBoard | null
+  suspectSuggestions: string[]
   setConfig: (config: BoardConfig | ((current: BoardConfig) => BoardConfig)) => void
   updateCategoryCount: (itemCount: ItemCount) => void
   updateName: (categoryId: CategoryId, index: number, name: string) => void
@@ -17,6 +34,7 @@ function SetupScreen({
   puzzleId,
   config,
   savedBoard,
+  suspectSuggestions,
   setConfig,
   updateCategoryCount,
   updateName,
@@ -24,6 +42,9 @@ function SetupScreen({
   onCancel,
 }: SetupScreenProps) {
   const includesMotive = config.categoryIds.includes('motive')
+  const inputCategories = INPUT_CATEGORY_ORDER.filter((categoryId) =>
+    config.categoryIds.includes(categoryId),
+  )
 
   return (
     <main className="setup-page">
@@ -105,7 +126,7 @@ function SetupScreen({
             </div>
           </div>
           <div className={`name-groups${includesMotive ? ' four-groups' : ''}`}>
-            {config.categoryIds.map((categoryId) => (
+            {inputCategories.map((categoryId) => (
               <fieldset className="name-group" key={categoryId}>
                 <legend>{CATEGORY_DETAILS[categoryId].title}</legend>
                 {Array.from({ length: config.itemCount }, (_, index) => (
@@ -116,13 +137,22 @@ function SetupScreen({
                       onChange={(event) => updateName(categoryId, index, event.target.value)}
                       placeholder={`${CATEGORY_DETAILS[categoryId].examples} (${index + 1})`}
                       aria-label={`${CATEGORY_DETAILS[categoryId].singular} ${index + 1}`}
+                      list={categoryId === 'person' && suspectSuggestions.length > 0
+                        ? 'suspect-suggestions'
+                        : undefined}
                       maxLength={36}
+                      onKeyDown={focusNextInput}
                     />
                   </label>
                 ))}
               </fieldset>
             ))}
           </div>
+          {suspectSuggestions.length > 0 && (
+            <datalist id="suspect-suggestions">
+              {suspectSuggestions.map((name) => <option key={name} value={name} />)}
+            </datalist>
+          )}
         </div>
 
         <div className="setup-actions">

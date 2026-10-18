@@ -14,6 +14,7 @@ type BoardState = {
   puzzles: PuzzleCollection
   activePuzzleId: number | null
   activeBoard: SavedBoard | null
+  suspectSuggestions: string[]
   config: BoardConfig
   isEditing: boolean
   openPuzzle: (puzzleId: number) => void
@@ -35,6 +36,13 @@ export function useBoard(): BoardState {
   const [config, setConfig] = useState<BoardConfig>(INITIAL_CONFIG)
   const [isEditing, setIsEditing] = useState(false)
   const activeBoard = activePuzzleId === null ? null : puzzles[activePuzzleId]?.board ?? null
+  const suspectSuggestions = [...new Map(
+    Object.values(puzzles)
+      .flatMap((progress) => progress.board?.names.person ?? [])
+      .map((name) => name.trim())
+      .filter((name) => name && !/^osoba \d+$/i.test(name))
+      .map((name) => [name.toLocaleLowerCase('pl'), name]),
+  ).values()]
 
   useEffect(() => {
     savePuzzleCollection(puzzles)
@@ -170,6 +178,7 @@ export function useBoard(): BoardState {
     puzzles,
     activePuzzleId,
     activeBoard,
+    suspectSuggestions,
     config,
     isEditing,
     openPuzzle,

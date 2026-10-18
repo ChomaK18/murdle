@@ -22,6 +22,7 @@ function App() {
         puzzleId={boardState.activePuzzleId}
         config={boardState.config}
         savedBoard={boardState.activeBoard}
+        suspectSuggestions={boardState.suspectSuggestions}
         setConfig={boardState.setConfig}
         updateCategoryCount={boardState.updateCategoryCount}
         updateName={boardState.updateName}
