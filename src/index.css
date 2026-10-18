@@ -551,6 +551,14 @@ button {
 .logic-board {
   display: grid;
   gap: 16px;
+  min-width: 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+
+.matrix-band {
+  display: grid;
+  min-width: max-content;
 }
 
 .shared-header,
@@ -605,26 +613,32 @@ button {
 }
 
 .shared-row {
-  grid-auto-rows: minmax(48px, auto);
-  margin-top: -16px;
-}
-
-.shared-row + .shared-row {
-  margin-top: 0;
+  --matrix-row-min-height: 52px;
 }
 
 .shared-axis-label {
+  position: relative;
+  display: block;
   align-self: stretch;
-  margin-right: 3px;
+  height: 100%;
+  margin: 2px;
   border-radius: 3px;
-  background: #eeede6;
-  color: #74776d;
+  background: #e9ede7;
+}
+
+.shared-axis-label > span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: #435b49;
   font-family: var(--mono);
   font-size: 8px;
   letter-spacing: .8px;
   text-transform: uppercase;
+  font-weight: 500;
   writing-mode: vertical-rl;
-  transform: rotate(180deg);
+  transform: translate(-50%, -50%) rotate(180deg);
+  white-space: nowrap;
 }
 
 .shared-row-label {
@@ -638,14 +652,10 @@ button {
   overflow-wrap: anywhere;
 }
 
-.shared-empty-cell {
-  visibility: hidden;
-}
-
 .matrix-cell {
   display: grid;
   min-width: 0;
-  min-height: 48px;
+  min-height: 52px;
   place-items: center;
   margin: 1px;
   border: 1px solid #e1dfd6;
@@ -657,6 +667,7 @@ button {
   font-size: 17px;
   font-weight: 600;
   line-height: 1;
+  touch-action: manipulation;
   transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
   -webkit-tap-highlight-color: transparent;
 }
@@ -1053,11 +1064,11 @@ button {
   }
 
   .shared-row {
-    grid-auto-rows: minmax(40px, auto);
+    --matrix-row-min-height: 48px;
   }
 
   .matrix-cell {
-    min-height: 40px;
+    min-height: 48px;
   }
 
   .matrix-cell {
@@ -1319,11 +1330,10 @@ button {
   }
 
   .shared-row {
-    grid-auto-rows: minmax(39px, auto);
-    margin-top: -12px;
+    --matrix-row-min-height: 48px;
   }
 
-  .shared-axis-label {
+  .shared-axis-label > span {
     font-size: 7px;
     letter-spacing: .4px;
   }
@@ -1344,7 +1354,7 @@ button {
   }
 
   .matrix-cell {
-    min-height: 39px;
+    min-height: 48px;
     margin: 1px 0;
     font-size: 16px;
   }
