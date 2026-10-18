@@ -9,6 +9,7 @@ type BoardScreenProps = {
   onBack: () => void
   onOpenSettings: () => void
   onToggleMark: (first: CategoryId, second: CategoryId, row: number, column: number) => void
+  onToggleAccusation: (categoryId: CategoryId, index: number) => void
   onClearMarks: () => void
   onToggleSolved: () => void
 }
@@ -20,6 +21,7 @@ function BoardScreen({
   onBack,
   onOpenSettings,
   onToggleMark,
+  onToggleAccusation,
   onClearMarks,
   onToggleSolved,
 }: BoardScreenProps) {
@@ -38,13 +40,14 @@ function BoardScreen({
         <div>
           <div className="eyebrow"><span className="eyebrow-line" /> ZAGADKA {puzzleId.toString().padStart(2, '0')} · AKTA SPRAWY</div>
           <h1>Wszystko się <em>łączy.</em></h1>
-          <p>Kliknij pole, aby zmienić jego stan: puste, zaznaczone, skreślone.</p>
+          <p>Kliknij pole, aby zmienić jego stan. Przytrzymaj nazwę, aby oznaczyć podejrzenie.</p>
         </div>
         <div className="board-tools">
           <div className="mark-legend" aria-label="Znaczenie stanów pól">
             <span><i className="legend-empty" /> Puste</span>
             <span><i className="legend-selected">✓</i> Pasuje</span>
             <span><i className="legend-crossed">×</i> Wykluczone</span>
+            <span><i className="legend-accusation" /> Podejrzenie</span>
           </div>
           <button className="clear-button" onClick={onClearMarks}>Wyczyść planszę</button>
           <button
@@ -57,7 +60,11 @@ function BoardScreen({
         </div>
       </section>
 
-      <LogicBoard board={board} onToggleMark={onToggleMark} />
+      <LogicBoard
+        board={board}
+        onToggleMark={onToggleMark}
+        onToggleAccusation={onToggleAccusation}
+      />
 
       <footer className="board-footer">
         <span>PRACUJ POWOLI. MYŚL DOKŁADNIE.</span>

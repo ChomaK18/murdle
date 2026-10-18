@@ -26,6 +26,7 @@ type BoardState = {
   updateName: (categoryId: CategoryId, index: number, name: string) => void
   createBoard: () => void
   toggleMark: (first: CategoryId, second: CategoryId, row: number, column: number) => void
+  toggleAccusation: (categoryId: CategoryId, index: number) => void
   clearMarks: () => void
   toggleSolved: (puzzleId: number) => void
 }
@@ -113,6 +114,7 @@ export function useBoard(): BoardState {
       itemCount: config.itemCount,
       names,
       marks: {},
+      accusations: {},
     }
     setPuzzles((current) => ({
       ...current,
@@ -148,6 +150,31 @@ export function useBoard(): BoardState {
     })
   }
 
+  function toggleAccusation(categoryId: CategoryId, index: number) {
+    if (activePuzzleId === null) return
+    setPuzzles((current) => {
+      const progress = current[activePuzzleId]
+      const board = progress?.board
+      if (
+        !progress ||
+        !board ||
+        !board.categoryIds.includes(categoryId) ||
+        index < 0 ||
+        index >= board.itemCount
+      ) return current
+      const accusations = { ...board.accusations }
+      if (accusations[categoryId] === index) delete accusations[categoryId]
+      else accusations[categoryId] = index
+      return {
+        ...current,
+        [activePuzzleId]: {
+          ...progress,
+          board: { ...board, accusations },
+        },
+      }
+    })
+  }
+
   function clearMarks() {
     if (activePuzzleId === null) return
     setPuzzles((current) => {
@@ -157,7 +184,7 @@ export function useBoard(): BoardState {
         ...current,
         [activePuzzleId]: {
           ...progress,
-          board: { ...progress.board, marks: {} },
+          board: { ...progress.board, marks: {}, accusations: {} },
         },
       }
     })
@@ -190,6 +217,7 @@ export function useBoard(): BoardState {
     updateName,
     createBoard,
     toggleMark,
+    toggleAccusation,
     clearMarks,
     toggleSolved,
   }

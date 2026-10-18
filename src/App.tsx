@@ -44,6 +44,7 @@ function App() {
       onBack={boardState.closePuzzle}
       onOpenSettings={boardState.openSettings}
       onToggleMark={boardState.toggleMark}
+      onToggleAccusation={boardState.toggleAccusation}
       onClearMarks={boardState.clearMarks}
       onToggleSolved={() => boardState.toggleSolved(puzzleId)}
     />

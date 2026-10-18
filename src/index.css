@@ -512,7 +512,8 @@ button {
 
 .legend-empty,
 .legend-selected,
-.legend-crossed {
+.legend-crossed,
+.legend-accusation {
   display: grid;
   width: 15px;
   height: 15px;
@@ -523,6 +524,13 @@ button {
   font-size: 11px;
   font-style: normal;
   line-height: 1;
+}
+
+.legend-accusation {
+  border: 2px solid #a52d32;
+  border-radius: 50%;
+  background: #fff6f3;
+  box-shadow: 0 0 5px rgb(165 45 50 / 30%);
 }
 
 .legend-selected {
@@ -583,6 +591,20 @@ button {
   align-items: center;
   justify-content: center;
   text-align: center;
+}
+
+.shared-column-label,
+.shared-row-label {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .shared-row-heading,
@@ -650,6 +672,24 @@ button {
   font-weight: 600;
   line-height: 1.25;
   overflow-wrap: anywhere;
+}
+
+.shared-column-label.is-accused,
+.shared-row-label.is-accused {
+  position: relative;
+  z-index: 1;
+  border-radius: 999px;
+  background: #fff6f3;
+  box-shadow:
+    inset 0 0 0 1.5px #a52d32,
+    0 0 11px rgb(165 45 50 / 30%);
+  color: #8c252b;
+}
+
+.shared-column-label:focus-visible,
+.shared-row-label:focus-visible {
+  outline: 2px solid #536d59;
+  outline-offset: 2px;
 }
 
 .matrix-cell {
@@ -1520,6 +1560,15 @@ button {
   border-bottom-color: #343a34;
 }
 
+:root[data-theme='dark'] .shared-column-label.is-accused,
+:root[data-theme='dark'] .shared-row-label.is-accused {
+  background: #392526;
+  box-shadow:
+    inset 0 0 0 1.5px #d86c70,
+    0 0 11px rgb(216 108 112 / 35%);
+  color: #ffd4d0;
+}
+
 :root[data-theme='dark'] .matrix-cell {
   border-color: #3b433c;
   background: #222823;
@@ -1549,6 +1598,12 @@ button {
   border-color: #654a43;
   background: #302622;
   color: #e0a391;
+}
+
+:root[data-theme='dark'] .legend-accusation {
+  border-color: #d86c70;
+  background: #392526;
+  box-shadow: 0 0 5px rgb(216 108 112 / 35%);
 }
 
 :root[data-theme='dark'] .puzzle-entry.in-progress {

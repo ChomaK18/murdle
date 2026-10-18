@@ -1,4 +1,5 @@
-import { Fragment } from 'react'
+import { Fragment, useEffect, useRef } from 'react'
+import type { CSSProperties } from 'react'
 import { CATEGORY_DETAILS } from '../data/categories'
 import { pairCellKey, pairKey } from '../lib/board'
 import type { CategoryId, SavedBoard } from '../types/board'
@@ -6,9 +7,71 @@ import type { CategoryId, SavedBoard } from '../types/board'
 type LogicBoardProps = {
   board: SavedBoard
   onToggleMark: (first: CategoryId, second: CategoryId, row: number, column: number) => void
+  onToggleAccusation: (categoryId: CategoryId, index: number) => void
 }
 
-function LogicBoard({ board, onToggleMark }: LogicBoardProps) {
+type AccusableLabelProps = {
+  categoryId: CategoryId
+  index: number
+  name: string
+  selected: boolean
+  className: string
+  style: CSSProperties
+  onToggleAccusation: (categoryId: CategoryId, index: number) => void
+}
+
+function AccusableLabel({
+  categoryId,
+  index,
+  name,
+  selected,
+  className,
+  style,
+  onToggleAccusation,
+}: AccusableLabelProps) {
+  const pressTimer = useRef<number | null>(null)
+  const clearPressTimer = () => {
+    if (pressTimer.current !== null) {
+      window.clearTimeout(pressTimer.current)
+      pressTimer.current = null
+    }
+  }
+
+  useEffect(() => clearPressTimer, [])
+
+  return (
+    <button
+      type="button"
+      className={`${className}${selected ? ' is-accused' : ''}`}
+      style={style}
+      title={`${name}${selected ? ' — oznaczone jako podejrzenie' : ' — przytrzymaj lub naciśnij Enter/Spację, aby oznaczyć podejrzenie'}`}
+      aria-label={`${name}${selected ? ', oznaczone jako podejrzenie' : ', przytrzymaj lub naciśnij Enter/Spację, aby oznaczyć podejrzenie'}`}
+      aria-pressed={selected}
+      onPointerDown={(event) => {
+        if (event.pointerType === 'mouse' && event.button !== 0) return
+        clearPressTimer()
+        pressTimer.current = window.setTimeout(() => {
+          pressTimer.current = null
+          onToggleAccusation(categoryId, index)
+        }, 550)
+      }}
+      onPointerUp={clearPressTimer}
+      onPointerLeave={clearPressTimer}
+      onPointerCancel={clearPressTimer}
+      onContextMenu={(event) => event.preventDefault()}
+      onKeyDown={(event) => {
+        if (!event.repeat && (event.key === 'Enter' || event.key === ' ')) {
+          event.preventDefault()
+          onToggleAccusation(categoryId, index)
+        }
+      }}
+    >
+      {name}
+    </button>
+  )
+}
+
+function LogicBoard({ board, onToggleMark, onToggleAccusation }: LogicBoardProps) {
   const hasMotive = board.categoryIds.includes('motive')
   const columnCategories: CategoryId[] = hasMotive
     ? ['person', 'motive', 'place']
@@ -61,17 +124,19 @@ function LogicBoard({ board, onToggleMark }: LogicBoardProps) {
                 <div className="shared-row-heading" style={{ gridColumn: 2, gridRow: 2 }} />
                 {visibleHeaderCategories.flatMap(({ categoryId, categoryIndex }) =>
                   board.names[categoryId].map((name, index) => (
-                    <div
+                    <AccusableLabel
+                      categoryId={categoryId}
+                      index={index}
+                      name={name}
+                      selected={board.accusations[categoryId] === index}
                       className="shared-column-label"
                       key={`${categoryId}-${index}`}
-                      title={name}
                       style={{
                         gridColumn: columnStarts[categoryIndex] + index,
                         gridRow: 2,
                       }}
-                    >
-                      {name}
-                    </div>
+                      onToggleAccusation={onToggleAccusation}
+                    />
                   )),
                 )}
               </div>
@@ -95,13 +160,15 @@ function LogicBoard({ board, onToggleMark }: LogicBoardProps) {
               </div>
               {board.names[rowCategory].map((rowName, row) => (
                 <Fragment key={`${rowCategory}-${row}`}>
-                  <div
+                  <AccusableLabel
+                    categoryId={rowCategory}
+                    index={row}
+                    name={rowName}
+                    selected={board.accusations[rowCategory] === row}
                     className="shared-row-label"
-                    title={rowName}
                     style={{ gridColumn: 2, gridRow: row + 1 }}
-                  >
-                    {rowName}
-                  </div>
+                    onToggleAccusation={onToggleAccusation}
+                  />
                   {rowColumnCategories.flatMap((columnCategory, categoryIndex) => {
                     const columnStart = columnStarts[categoryIndex]
                     const cells = board.marks[pairKey(rowCategory, columnCategory)] ?? {}

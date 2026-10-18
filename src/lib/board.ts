@@ -50,11 +50,28 @@ function parseSavedBoard(value: unknown): SavedBoard | null {
     )
   }
 
+  const accusations: Partial<Record<CategoryId, number>> = {}
+  if (candidate.accusations && typeof candidate.accusations === 'object') {
+    for (const [categoryId, index] of Object.entries(candidate.accusations)) {
+      if (
+        isCategoryId(categoryId) &&
+        candidate.categoryIds.includes(categoryId) &&
+        typeof index === 'number' &&
+        Number.isInteger(index) &&
+        index >= 0 &&
+        index < candidate.itemCount
+      ) {
+        accusations[categoryId] = index
+      }
+    }
+  }
+
   return {
     categoryIds: candidate.categoryIds,
     itemCount: candidate.itemCount,
     names,
     marks,
+    accusations,
   }
 }
 

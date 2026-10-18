@@ -9,6 +9,7 @@ Interaktywna, responsywna plansza logiczna do notowania wskazówek podczas rozwi
 - Wpisywanie własnych nazw elementów.
 - Plansza z układem sekcji wzorowanym na książkowej siatce logicznej.
 - Trzy stany każdego pola: puste, zaznaczone i skreślone. Klikaj pole, aby przełączać stany.
+- Podejrzenie w każdej kategorii: przytrzymaj nazwę osoby, narzędzia, miejsca lub motywu, aby zaznaczyć ją krwistoczerwoną otoczką. W kategorii można wskazać jeden element; przytrzymanie innego zastępuje poprzedni, a przytrzymanie tego samego usuwa oznaczenie.
 - Automatyczny zapis planszy na bieżącym urządzeniu w `localStorage`.
 - Układ dostosowany do ekranów komputerów i telefonów.
 - Tryb offline po pierwszym otwarciu aplikacji z dostępem do internetu.

@@ -11,6 +11,7 @@ export type BoardConfig = {
 
 export type SavedBoard = BoardConfig & {
   marks: Record<string, Marks>
+  accusations: Partial<Record<CategoryId, number>>
 }
 
 export type PuzzleStatus = 'not-started' | 'in-progress' | 'solved'
