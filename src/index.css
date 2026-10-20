@@ -566,7 +566,8 @@ button {
 
 .matrix-band {
   display: grid;
-  min-width: max-content;
+  width: 100%;
+  min-width: 0;
 }
 
 .shared-header,
@@ -577,7 +578,7 @@ button {
 }
 
 .shared-header {
-  grid-template-rows: 30px 42px;
+  grid-template-rows: 30px auto;
 }
 
 .shared-corner,
@@ -695,7 +696,9 @@ button {
 .matrix-cell {
   display: grid;
   min-width: 0;
-  min-height: 52px;
+  min-height: 0;
+  aspect-ratio: 1;
+  align-self: center;
   place-items: center;
   margin: 1px;
   border: 1px solid #e1dfd6;
@@ -1100,15 +1103,11 @@ button {
   }
 
   .shared-header {
-    grid-template-rows: 27px 38px;
+    grid-template-rows: 27px auto;
   }
 
   .shared-row {
     --matrix-row-min-height: 48px;
-  }
-
-  .matrix-cell {
-    min-height: 48px;
   }
 
   .matrix-cell {
@@ -1366,7 +1365,7 @@ button {
   }
 
   .shared-header {
-    grid-template-rows: 25px 38px;
+    grid-template-rows: 25px auto;
   }
 
   .shared-row {
@@ -1394,7 +1393,6 @@ button {
   }
 
   .matrix-cell {
-    min-height: 48px;
     margin: 1px 0;
     font-size: 16px;
   }
