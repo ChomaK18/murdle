@@ -1,0 +1,404 @@
+@media (max-width: 1080px) {
+  .board-page {
+    padding-right: 28px;
+    padding-left: 28px;
+  }
+
+  .tracker-page {
+    padding-right: 28px;
+    padding-left: 28px;
+  }
+
+  .puzzle-library {
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+
+}
+
+@media (max-width: 760px) {
+  .setup-page {
+    padding: 0 16px 20px;
+  }
+
+  .setup-topbar {
+    min-height: 63px;
+  }
+
+  .setup-card {
+    margin-top: 22px;
+    padding: 27px 23px 23px;
+  }
+
+  .setup-card > h1 {
+    font-size: 35px;
+  }
+
+  .setup-section {
+    margin-top: 26px;
+  }
+
+  .choice-row,
+  .count-selector,
+  .name-groups {
+    padding-left: 0;
+  }
+
+  .board-page {
+    padding: 0 18px 20px;
+  }
+
+  .tracker-page {
+    padding: 0 18px 20px;
+  }
+
+  .board-topbar {
+    min-height: 63px;
+  }
+
+  .board-topbar-actions {
+    gap: 9px;
+  }
+
+  .save-status {
+    font-size: 0;
+  }
+
+  .save-status > span {
+    width: 7px;
+    height: 7px;
+  }
+
+  .board-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 14px;
+    padding: 25px 0 17px;
+  }
+
+  .board-heading h1 {
+    font-size: 32px;
+  }
+
+  .board-tools {
+    width: 100%;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+  }
+
+  .mark-legend {
+    justify-content: flex-start;
+    gap: 10px;
+  }
+
+  .shared-header {
+    grid-template-rows: 27px auto;
+  }
+
+  .shared-row {
+    --matrix-row-min-height: 48px;
+  }
+
+  .matrix-cell {
+    font-size: 19px;
+  }
+}
+
+@media (max-width: 480px) {
+  .setup-kicker {
+    font-size: 7px;
+  }
+
+  .setup-card {
+    padding: 24px 17px 20px;
+  }
+
+  .setup-card > h1 {
+    font-size: 32px;
+  }
+
+  .setup-intro {
+    font-size: 11px;
+  }
+
+  .setup-section-heading h2 {
+    font-size: 16px;
+  }
+
+  .choice-row {
+    gap: 7px;
+  }
+
+  .choice-card {
+    min-height: 72px;
+    padding-right: 6px;
+    padding-left: 33px;
+  }
+
+  .choice-check {
+    left: 9px;
+    width: 15px;
+    height: 15px;
+  }
+
+  .choice-title {
+    font-size: 11px;
+  }
+
+  .choice-description {
+    font-size: 8px;
+  }
+
+  .name-groups,
+  .name-groups.four-groups {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px 10px;
+  }
+
+  .name-input-wrap {
+    gap: 5px;
+    padding: 0 5px;
+  }
+
+  .name-input-wrap input {
+    font-size: 9px;
+  }
+
+  .setup-actions {
+    align-items: stretch;
+    flex-direction: column-reverse;
+    gap: 6px;
+  }
+
+  .primary-button {
+    justify-content: space-between;
+  }
+
+  .text-button {
+    align-self: center;
+  }
+
+  .reset-note {
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  .board-page {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .tracker-page {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .brand-mark {
+    width: 31px;
+    height: 31px;
+    font-size: 19px;
+  }
+
+  .brand-name {
+    font-size: 23px;
+  }
+
+  .board-topbar-actions {
+    gap: 0;
+  }
+
+  .outline-button {
+    min-height: 27px;
+    padding: 0 9px;
+    font-size: 8px;
+    line-height: 1;
+  }
+
+  .board-topbar-actions .outline-button {
+    padding: 0 9px;
+    font-size: 8px;
+  }
+
+  .board-topbar-actions {
+    gap: 6px;
+  }
+
+  .tracker-kicker {
+    font-size: 7px;
+    letter-spacing: .45px;
+  }
+
+  .tracker-heading h1 {
+    font-size: 31px;
+  }
+
+  .tracker-heading p {
+    max-width: 310px;
+    font-size: 10px;
+    line-height: 1.5;
+  }
+
+  .tracker-summary {
+    gap: 10px;
+  }
+
+  .tracker-summary strong {
+    font-size: 22px;
+  }
+
+  .tracker-summary span {
+    font-size: 6px;
+    letter-spacing: .4px;
+  }
+
+  .puzzle-library-heading h2 {
+    font-size: 21px;
+  }
+
+  .tracker-legend {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .puzzle-open {
+    min-height: 56px;
+  }
+
+  .puzzle-entry-state {
+    font-size: 0;
+  }
+
+  .puzzle-solved-toggle {
+    top: auto;
+    right: 3px;
+    bottom: 3px;
+    width: 22px;
+    height: 22px;
+  }
+
+  .board-heading p {
+    max-width: 300px;
+    line-height: 1.5;
+  }
+
+  .tracker-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 16px;
+    padding: 25px 0 18px;
+  }
+
+  .tracker-heading h1 {
+    font-size: 34px;
+  }
+
+  .tracker-summary {
+    width: 100%;
+    justify-content: space-between;
+    padding-right: 8px;
+    padding-left: 8px;
+  }
+
+  .puzzle-library {
+    padding: 15px 11px 13px;
+  }
+
+  .puzzle-library-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 11px;
+    margin-bottom: 13px;
+  }
+
+  .tracker-legend {
+    gap: 10px;
+  }
+
+  .tracker-legend > span {
+    font-size: 7px;
+  }
+
+  .puzzle-solved-toggle {
+    top: auto;
+    right: 4px;
+    bottom: 4px;
+    width: 20px;
+    height: 20px;
+    font-size: 8px;
+  }
+
+  .board-tools {
+    grid-template-columns: 1fr;
+    justify-items: start;
+    gap: 7px;
+  }
+
+  .mark-legend {
+    gap: 9px;
+  }
+
+  .mark-legend > span {
+    font-size: 8px;
+  }
+
+  .solved-action {
+    font-size: 7px;
+  }
+
+  .clear-button {
+    font-size: 8px;
+  }
+
+  .logic-board {
+    gap: 12px;
+  }
+
+  .shared-header {
+    grid-template-rows: 25px auto;
+  }
+
+  .shared-row {
+    --matrix-row-min-height: 48px;
+  }
+
+  .shared-axis-label > span {
+    font-size: 7px;
+    letter-spacing: .4px;
+  }
+
+  .shared-row-label {
+    padding: 4px 5px;
+    font-size: 8px;
+  }
+
+  .shared-category-heading {
+    font-size: 7px;
+    letter-spacing: .3px;
+  }
+
+  .shared-column-label {
+    padding: 3px 1px;
+    font-size: 8px;
+  }
+
+  .matrix-cell {
+    margin: 1px 0;
+    font-size: 16px;
+  }
+
+  .board-footer {
+    gap: 12px;
+    font-size: 6px;
+    line-height: 1.6;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
+}
+
