@@ -1,4 +1,4 @@
-import type { CategoryId, PuzzleStatus, SavedBoard } from '../types/board'
+import { PUZZLE_COUNT, type CategoryId, type PuzzleStatus, type SavedBoard } from '../types/board'
 import Brand from './Brand'
 import LogicBoard from './LogicBoard'
 
@@ -7,6 +7,7 @@ type BoardScreenProps = {
   status: PuzzleStatus
   board: SavedBoard
   onBack: () => void
+  onNextPuzzle: () => void
   onOpenSettings: () => void
   onToggleMark: (first: CategoryId, second: CategoryId, row: number, column: number) => void
   onToggleAccusation: (categoryId: CategoryId, index: number) => void
@@ -19,6 +20,7 @@ function BoardScreen({
   status,
   board,
   onBack,
+  onNextPuzzle,
   onOpenSettings,
   onToggleMark,
   onToggleAccusation,
@@ -50,13 +52,20 @@ function BoardScreen({
             <span><i className="legend-accusation" /> Podejrzenie</span>
           </div>
           <button className="clear-button" onClick={onClearMarks}>Wyczyść planszę</button>
-          <button
-            className={`solved-action${status === 'solved' ? ' is-solved' : ''}`}
-            onClick={onToggleSolved}
-            aria-pressed={status === 'solved'}
-          >
-            {status === 'solved' ? '✓ ZAGADKA ROZWIĄZANA' : 'OZNACZ JAKO ROZWIĄZANĄ'}
-          </button>
+          <div className="solved-actions">
+            <button
+              className={`solved-action${status === 'solved' ? ' is-solved' : ''}`}
+              onClick={onToggleSolved}
+              aria-pressed={status === 'solved'}
+            >
+              {status === 'solved' ? '✓ ZAGADKA ROZWIĄZANA' : 'OZNACZ JAKO ROZWIĄZANĄ'}
+            </button>
+            {status === 'solved' && puzzleId < PUZZLE_COUNT && (
+              <button className="outline-button" onClick={onNextPuzzle}>
+                Następna zagadka →
+              </button>
+            )}
+          </div>
         </div>
       </section>
 

@@ -14,6 +14,7 @@ Interaktywna, responsywna plansza logiczna do notowania wskazówek podczas rozwi
 - Układ dostosowany do ekranów komputerów i telefonów.
 - Tryb offline po pierwszym otwarciu aplikacji z dostępem do internetu.
 - Lista 100 zagadek z osobnymi planszami i stanami: nierozpoczęta, w trakcie i rozwiązana.
+- Bezpośrednie przejście do następnej zagadki po oznaczeniu bieżącej jako rozwiązanej.
 
 ## Wymagania
 

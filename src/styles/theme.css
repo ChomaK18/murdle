@@ -127,6 +127,21 @@
   color: #bdcdbb;
 }
 
+:root[data-theme='dark'] .primary-button {
+  border-color: #607661;
+  background: #435b46;
+}
+
+:root[data-theme='dark'] .primary-button:hover {
+  border-color: #718675;
+  background: #506a53;
+}
+
+:root[data-theme='dark'] .legend-selected {
+  border-color: #718675;
+  background: #435b46;
+}
+
 :root[data-theme='dark'] .matrix-cell:hover {
   border-color: #7a8b79;
   background: #2a352d;

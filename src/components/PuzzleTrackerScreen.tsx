@@ -1,7 +1,5 @@
-import type { PuzzleCollection, PuzzleStatus } from '../types/board'
+import { PUZZLE_COUNT, type PuzzleCollection, type PuzzleStatus } from '../types/board'
 import Brand from './Brand'
-
-const PUZZLE_COUNT = 100
 
 type PuzzleTrackerScreenProps = {
   puzzles: PuzzleCollection

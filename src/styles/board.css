@@ -143,6 +143,13 @@
   text-underline-offset: 3px;
 }
 
+.solved-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
 .logic-board {
   display: grid;
   gap: 16px;
@@ -337,4 +344,3 @@
   color: var(--gold);
   font-style: normal;
 }
-

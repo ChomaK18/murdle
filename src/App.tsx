@@ -42,6 +42,7 @@ function App() {
       status={status}
       board={board}
       onBack={boardState.closePuzzle}
+      onNextPuzzle={() => boardState.openPuzzle(puzzleId + 1)}
       onOpenSettings={boardState.openSettings}
       onToggleMark={boardState.toggleMark}
       onToggleAccusation={boardState.toggleAccusation}

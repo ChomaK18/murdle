@@ -3,6 +3,8 @@ export type Mark = 'empty' | 'selected' | 'crossed'
 export type ItemCount = 3 | 4
 export type Marks = Record<string, Mark>
 
+export const PUZZLE_COUNT = 100
+
 export type BoardConfig = {
   categoryIds: CategoryId[]
   itemCount: ItemCount
