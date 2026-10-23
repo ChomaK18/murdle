@@ -41,6 +41,7 @@ function App() {
       puzzleId={puzzleId}
       status={status}
       board={board}
+      onSelectSuspect={boardState.selectSuspect}
       onBack={boardState.closePuzzle}
       onNextPuzzle={() => boardState.openPuzzle(puzzleId + 1)}
       onOpenSettings={boardState.openSettings}

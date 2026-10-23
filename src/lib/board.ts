@@ -1,6 +1,7 @@
 import { EMPTY_NAMES } from '../data/categories'
 import type {
   CategoryId,
+  BoardAnnotations,
   Mark,
   PuzzleCollection,
   PuzzleProgress,
@@ -12,6 +13,45 @@ const CATEGORY_ORDER: CategoryId[] = ['person', 'tool', 'place', 'motive']
 
 function isCategoryId(value: unknown): value is CategoryId {
   return value === 'person' || value === 'tool' || value === 'place' || value === 'motive'
+}
+
+function parseMarks(value: unknown): Record<string, Record<string, Mark>> {
+  if (!value || typeof value !== 'object') return {}
+  return Object.fromEntries(
+    Object.entries(value).map(([pairId, pairMarks]) => [
+      pairId,
+      !pairMarks || typeof pairMarks !== 'object'
+        ? {}
+        : Object.fromEntries(
+          Object.entries(pairMarks).filter(
+            (entry): entry is [string, Mark] =>
+              entry[1] === 'selected' || entry[1] === 'crossed',
+          ),
+        ),
+    ]),
+  )
+}
+
+function parseAccusations(
+  value: unknown,
+  categoryIds: CategoryId[],
+  itemCount: number,
+): Partial<Record<CategoryId, number>> {
+  const accusations: Partial<Record<CategoryId, number>> = {}
+  if (!value || typeof value !== 'object') return accusations
+  for (const [categoryId, index] of Object.entries(value)) {
+    if (
+      isCategoryId(categoryId) &&
+      categoryIds.includes(categoryId) &&
+      typeof index === 'number' &&
+      Number.isInteger(index) &&
+      index >= 0 &&
+      index < itemCount
+    ) {
+      accusations[categoryId] = index
+    }
+  }
+  return accusations
 }
 
 function parseSavedBoard(value: unknown): SavedBoard | null {
@@ -39,32 +79,45 @@ function parseSavedBoard(value: unknown): SavedBoard | null {
     )
   }
 
-  const marks: Record<string, Record<string, Mark>> = {}
-  for (const [pairId, pairMarks] of Object.entries(candidate.marks)) {
-    if (!pairMarks || typeof pairMarks !== 'object') continue
-    marks[pairId] = Object.fromEntries(
-      Object.entries(pairMarks).filter(
-        (entry): entry is [string, Mark] =>
-          entry[1] === 'selected' || entry[1] === 'crossed',
-      ),
-    )
-  }
+  const marks = parseMarks(candidate.marks)
+  const accusations = parseAccusations(
+    candidate.accusations,
+    candidate.categoryIds,
+    candidate.itemCount,
+  )
 
-  const accusations: Partial<Record<CategoryId, number>> = {}
-  if (candidate.accusations && typeof candidate.accusations === 'object') {
-    for (const [categoryId, index] of Object.entries(candidate.accusations)) {
+  const suspectScenarios: Partial<Record<number, BoardAnnotations>> = {}
+  if (candidate.suspectScenarios && typeof candidate.suspectScenarios === 'object') {
+    for (const [suspectId, scenario] of Object.entries(candidate.suspectScenarios)) {
+      const index = Number(suspectId)
       if (
-        isCategoryId(categoryId) &&
-        candidate.categoryIds.includes(categoryId) &&
-        typeof index === 'number' &&
-        Number.isInteger(index) &&
-        index >= 0 &&
-        index < candidate.itemCount
-      ) {
-        accusations[categoryId] = index
+        !Number.isInteger(index) ||
+        index < 0 ||
+        index >= candidate.itemCount ||
+        !scenario ||
+        typeof scenario !== 'object'
+      ) continue
+      const scenarioValue = scenario as Partial<BoardAnnotations>
+      suspectScenarios[index] = {
+        marks: parseMarks(scenarioValue.marks),
+        accusations: parseAccusations(
+          scenarioValue.accusations,
+          candidate.categoryIds,
+          candidate.itemCount,
+        ),
       }
     }
   }
+
+  const activeSuspectIndex =
+    candidate.activeSuspectIndex === null
+      ? null
+      : typeof candidate.activeSuspectIndex === 'number' &&
+          Number.isInteger(candidate.activeSuspectIndex) &&
+          candidate.activeSuspectIndex >= 0 &&
+          candidate.activeSuspectIndex < candidate.itemCount
+        ? candidate.activeSuspectIndex
+        : null
 
   return {
     categoryIds: candidate.categoryIds,
@@ -72,6 +125,8 @@ function parseSavedBoard(value: unknown): SavedBoard | null {
     names,
     marks,
     accusations,
+    suspectScenarios,
+    activeSuspectIndex,
   }
 }
 

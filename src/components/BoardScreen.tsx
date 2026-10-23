@@ -6,6 +6,7 @@ type BoardScreenProps = {
   puzzleId: number
   status: PuzzleStatus
   board: SavedBoard
+  onSelectSuspect: (index: number | null) => void
   onBack: () => void
   onNextPuzzle: () => void
   onOpenSettings: () => void
@@ -19,6 +20,7 @@ function BoardScreen({
   puzzleId,
   status,
   board,
+  onSelectSuspect,
   onBack,
   onNextPuzzle,
   onOpenSettings,
@@ -45,6 +47,22 @@ function BoardScreen({
           <p>Kliknij pole, aby zmienić jego stan. Przytrzymaj nazwę, aby oznaczyć podejrzenie.</p>
         </div>
         <div className="board-tools">
+          <label className="suspect-scenario">
+            <span>Zakładam, że mordercą jest</span>
+            <select
+              value={board.activeSuspectIndex ?? ''}
+              onChange={(event) =>
+                onSelectSuspect(event.target.value === '' ? null : Number(event.target.value))
+              }
+              aria-label="Wybierz podejrzanego w testowanym scenariuszu"
+            >
+              <option value="">Wybierz podejrzanego</option>
+              {board.names.person.map((name, index) => (
+                <option value={index} key={`${index}-${name}`}>{name}</option>
+              ))}
+            </select>
+            <small>Ta osoba kłamie, pozostali mówią prawdę.</small>
+          </label>
           <div className="mark-legend" aria-label="Znaczenie stanów pól">
             <span><i className="legend-empty" /> Puste</span>
             <span><i className="legend-selected">✓</i> Pasuje</span>

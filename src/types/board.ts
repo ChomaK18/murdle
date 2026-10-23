@@ -11,9 +11,16 @@ export type BoardConfig = {
   names: Record<CategoryId, string[]>
 }
 
+export type BoardAnnotations = {
+  marks: Record<string, Marks>
+  accusations: Partial<Record<CategoryId, number>>
+}
+
 export type SavedBoard = BoardConfig & {
   marks: Record<string, Marks>
   accusations: Partial<Record<CategoryId, number>>
+  suspectScenarios?: Partial<Record<number, BoardAnnotations>>
+  activeSuspectIndex?: number | null
 }
 
 export type PuzzleStatus = 'not-started' | 'in-progress' | 'solved'

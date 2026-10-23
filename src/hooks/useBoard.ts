@@ -3,6 +3,7 @@ import { CATEGORY_DETAILS, EMPTY_NAMES, INITIAL_CONFIG } from '../data/categorie
 import { pairCellKey, pairKey, readPuzzleCollection, savePuzzleCollection } from '../lib/board'
 import type {
   BoardConfig,
+  BoardAnnotations,
   CategoryId,
   ItemCount,
   Mark,
@@ -27,6 +28,7 @@ type BoardState = {
   createBoard: () => void
   toggleMark: (first: CategoryId, second: CategoryId, row: number, column: number) => void
   toggleAccusation: (categoryId: CategoryId, index: number) => void
+  selectSuspect: (index: number | null) => void
   clearMarks: () => void
   toggleSolved: (puzzleId: number) => void
 }
@@ -36,7 +38,13 @@ export function useBoard(): BoardState {
   const [activePuzzleId, setActivePuzzleId] = useState<number | null>(null)
   const [config, setConfig] = useState<BoardConfig>(INITIAL_CONFIG)
   const [isEditing, setIsEditing] = useState(false)
-  const activeBoard = activePuzzleId === null ? null : puzzles[activePuzzleId]?.board ?? null
+  const savedBoard = activePuzzleId === null ? null : puzzles[activePuzzleId]?.board ?? null
+  const activeScenario = savedBoard?.activeSuspectIndex == null
+    ? undefined
+    : savedBoard.suspectScenarios?.[savedBoard.activeSuspectIndex]
+  const activeBoard = savedBoard && activeScenario
+    ? { ...savedBoard, ...activeScenario }
+    : savedBoard
   const suspectSuggestions = [...new Map(
     Object.values(puzzles)
       .flatMap((progress) => progress.board?.names.person ?? [])
@@ -126,25 +134,87 @@ export function useBoard(): BoardState {
     setIsEditing(false)
   }
 
+  function getActiveAnnotations(board: SavedBoard): BoardAnnotations {
+    const activeIndex = board.activeSuspectIndex
+    return activeIndex == null
+      ? { marks: board.marks, accusations: board.accusations }
+      : board.suspectScenarios?.[activeIndex] ?? {
+        marks: board.marks,
+        accusations: board.accusations,
+      }
+  }
+
+  function withActiveAnnotations(
+    board: SavedBoard,
+    annotations: BoardAnnotations,
+  ): SavedBoard {
+    const activeIndex = board.activeSuspectIndex
+    if (activeIndex == null) return { ...board, ...annotations }
+    return {
+      ...board,
+      suspectScenarios: {
+        ...board.suspectScenarios,
+        [activeIndex]: annotations,
+      },
+    }
+  }
+
   function toggleMark(first: CategoryId, second: CategoryId, row: number, column: number) {
     if (activePuzzleId === null) return
     setPuzzles((current) => {
       const progress = current[activePuzzleId]
       const board = progress?.board
       if (!progress || !board) return current
+      const annotations = getActiveAnnotations(board)
       const key = pairKey(first, second)
       const markKey = pairCellKey(first, second, row, column)
-      const currentMark = board.marks[key]?.[markKey] ?? 'empty'
+      const currentMark = annotations.marks[key]?.[markKey] ?? 'empty'
       const nextMark: Mark =
         currentMark === 'empty' ? 'selected' : currentMark === 'selected' ? 'crossed' : 'empty'
-      const pairMarks = { ...board.marks[key] }
+      const pairMarks = { ...annotations.marks[key] }
       if (nextMark === 'empty') delete pairMarks[markKey]
       else pairMarks[markKey] = nextMark
+      const updatedMarks = { ...annotations.marks, [key]: pairMarks }
+      if (nextMark === 'empty' && Object.keys(pairMarks).length === 0) delete updatedMarks[key]
+      const updatedBoard = withActiveAnnotations(board, {
+        ...annotations,
+        marks: updatedMarks,
+      })
       return {
         ...current,
         [activePuzzleId]: {
           ...progress,
-          board: { ...board, marks: { ...board.marks, [key]: pairMarks } },
+          board: updatedBoard,
+        },
+      }
+    })
+  }
+
+  function selectSuspect(index: number | null) {
+    if (activePuzzleId === null) return
+    setPuzzles((current) => {
+      const progress = current[activePuzzleId]
+      const board = progress?.board
+      if (!progress || !board) return current
+      if (
+        index !== null &&
+        (!Number.isInteger(index) || index < 0 || index >= board.itemCount)
+      ) return current
+      if (index === board.activeSuspectIndex) return current
+
+      const annotations = getActiveAnnotations(board)
+      const suspectScenarios = index !== null && !board.suspectScenarios?.[index]
+        ? { ...board.suspectScenarios, [index]: annotations }
+        : board.suspectScenarios
+      return {
+        ...current,
+        [activePuzzleId]: {
+          ...progress,
+          board: {
+            ...board,
+            activeSuspectIndex: index,
+            ...(suspectScenarios ? { suspectScenarios } : {}),
+          },
         },
       }
     })
@@ -162,14 +232,16 @@ export function useBoard(): BoardState {
         index < 0 ||
         index >= board.itemCount
       ) return current
-      const accusations = { ...board.accusations }
+      const annotations = getActiveAnnotations(board)
+      const accusations = { ...annotations.accusations }
       if (accusations[categoryId] === index) delete accusations[categoryId]
       else accusations[categoryId] = index
+      const updatedBoard = withActiveAnnotations(board, { ...annotations, accusations })
       return {
         ...current,
         [activePuzzleId]: {
           ...progress,
-          board: { ...board, accusations },
+          board: updatedBoard,
         },
       }
     })
@@ -184,7 +256,7 @@ export function useBoard(): BoardState {
         ...current,
         [activePuzzleId]: {
           ...progress,
-          board: { ...progress.board, marks: {}, accusations: {} },
+          board: withActiveAnnotations(progress.board, { marks: {}, accusations: {} }),
         },
       }
     })
@@ -218,6 +290,7 @@ export function useBoard(): BoardState {
     createBoard,
     toggleMark,
     toggleAccusation,
+    selectSuspect,
     clearMarks,
     toggleSolved,
   }

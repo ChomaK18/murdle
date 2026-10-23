@@ -81,6 +81,31 @@
   padding-bottom: 2px;
 }
 
+.suspect-scenario {
+  display: grid;
+  grid-template-columns: auto minmax(145px, 1fr);
+  align-items: center;
+  gap: 6px 9px;
+  color: #62665c;
+  font-size: 9px;
+}
+
+.suspect-scenario select {
+  min-height: 30px;
+  padding: 0 9px;
+  border: 1px solid #deddd4;
+  border-radius: 2px;
+  background: var(--paper);
+  color: #3f5947;
+  font: inherit;
+}
+
+.suspect-scenario small {
+  grid-column: 2;
+  color: #898a80;
+  font-size: 8px;
+}
+
 .mark-legend {
   display: flex;
   flex-wrap: wrap;

@@ -10,6 +10,7 @@ Interaktywna, responsywna plansza logiczna do notowania wskazówek podczas rozwi
 - Plansza z układem sekcji wzorowanym na książkowej siatce logicznej.
 - Trzy stany każdego pola: puste, zaznaczone i skreślone. Klikaj pole, aby przełączać stany.
 - Podejrzenie w każdej kategorii: przytrzymaj nazwę osoby, narzędzia, miejsca lub motywu, aby zaznaczyć ją krwistoczerwoną otoczką. W kategorii można wskazać jeden element; przytrzymanie innego zastępuje poprzedni, a przytrzymanie tego samego usuwa oznaczenie.
+- Testowanie podejrzanych: wybierz osobę z listy, aby prowadzić osobny zestaw zaznaczeń przy założeniu, że ta osoba kłamie, a pozostali mówią prawdę. Nowy scenariusz kopiuje aktualne zaznaczenia; przełączanie osób zachowuje postęp każdego scenariusza osobno.
 - Automatyczny zapis planszy na bieżącym urządzeniu w `localStorage`.
 - Układ dostosowany do ekranów komputerów i telefonów.
 - Tryb offline po pierwszym otwarciu aplikacji z dostępem do internetu.
